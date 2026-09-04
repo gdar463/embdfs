@@ -50,7 +50,7 @@ add_library(embdfs-lib STATIC
 
 add_dependencies(embdfs-lib generate_resources)
 
-target_include_directories(embdfs-lib PRIVATE
+target_include_directories(embdfs-lib PUBLIC
     include)
 
 target_link_libraries(embdfs-lib PRIVATE
