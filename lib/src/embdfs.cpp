@@ -19,8 +19,6 @@
 
 #include "embdfs.hpp"
 
-libdeflate_decompressor *decompressor = libdeflate_alloc_decompressor();
-
 namespace embdfs {
 
 const byte_t *Resource::data() const {
@@ -36,13 +34,10 @@ size_t Resource::size() const {
 	return decompressed_content.size();
 }
 
-Resource::~Resource() {
-	if (decompressor != nullptr) {
-		libdeflate_free_decompressor(decompressor);
-	}
-}
-
 libdeflate_result Resource::decompress_if_needed() const {
+	if (!decompressor) {
+		abort();
+	}
 	if (!decompressed_content.empty()) {
 		return libdeflate_result::LIBDEFLATE_SUCCESS;
 	}
@@ -68,6 +63,13 @@ const Resource *get(const std::filesystem::path &p_path) {
 		}
 	}
 	return nullptr;
+}
+
+void setup() {
+	decompressor = libdeflate_alloc_decompressor();
+}
+void cleanup() {
+	libdeflate_free_decompressor(decompressor);
 }
 
 } //namespace embdfs

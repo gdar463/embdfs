@@ -30,14 +30,14 @@
 #define byte_t std::uint8_t
 
 namespace embdfs {
+static libdeflate_decompressor *decompressor = nullptr;
+
 class Resource {
 public:
 	constexpr Resource(const std::span<byte_t> &p_content) : content(p_content) {}
 
 	const byte_t *data() const;
 	size_t size() const;
-
-	~Resource();
 
 private:
 	libdeflate_result decompress_if_needed() const;
@@ -58,4 +58,6 @@ std::span<std::string> get_paths();
 std::span<ResourceLocation> get_resources();
 
 const Resource *get(const std::filesystem::path &p_path);
+void setup();
+void cleanup();
 } //namespace embdfs
