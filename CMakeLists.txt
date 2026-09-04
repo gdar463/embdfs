@@ -15,7 +15,11 @@ endif()
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 if(NOT DEFINED EMBDFS_PATH)
-    message(FATAL_ERROR "EMBDFS_PATH is not defined.")
+    if(PROJECT_IS_TOP_LEVEL)
+        set(EMBDFS_PATH "${CMAKE_SOURCE_DIR}/test")
+    else()
+        message(FATAL_ERROR "EMBDFS_PATH is not defined.")
+    endif()
 endif()
 
 add_subdirectory(third_party)
@@ -43,3 +47,7 @@ ExternalProject_Add(generator
         "${EMBDFS_GENERATOR}")
 
 add_subdirectory(lib)
+
+if(PROJECT_IS_TOP_LEVEL)
+    add_subdirectory(main)
+endif()
