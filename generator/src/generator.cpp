@@ -58,7 +58,7 @@ std::string canonicalize(std::string p_path) {
 int main() {
 	std::ofstream output{ EMBDFS_GENERATED_RESOURCES };
 
-	std::cout << "[embdfs]: resource path set to  EMBDFS_PATH " << std::endl;
+	std::cout << "[embdfs]: resource path set to " EMBDFS_PATH << std::endl;
 	if (!std::fs::exists(EMBDFS_PATH)) {
 		std::cerr << "[embdfs]: resource path doesn't exist" << std::endl;
 		cleanup();
@@ -117,7 +117,7 @@ int main() {
 		for (byte_t byte : compressed_data) {
 			output << static_cast<uint64_t>(byte) << ",";
 		}
-		output << " };\n\n";
+		output << "};\n\n";
 
 		paths.push_back(canonicalize(relative.string()));
 		n++;
@@ -126,20 +126,20 @@ int main() {
 	output << "\n";
 
 	output << "std::span<std::string> embdfs::get_paths() {\n";
-	output << "  static std::array<std::string, " << n << "> paths = {\n";
+	output << "  static std::array<std::string, " << n << "> paths = {";
 	for (const std::fs::path &path : paths) {
-		output << "    " << path << ",\n";
+		output << "\n    " << path << ",";
 	}
-	output << "  };\n";
+	output << "\n  };\n";
 	output << "  return paths;\n";
 	output << "}\n\n";
 
 	output << "std::span<embdfs::ResourceLocation> embdfs::get_resources() {\n";
-	output << "  static std::array<embdfs::ResourceLocation, " << n << "> resources = {\n";
+	output << "  static std::array<embdfs::ResourceLocation, " << n << "> resources = {";
 	for (size_t i = 0; i < n; i++) {
-		output << "    embdfs::ResourceLocation{" << paths[i] << ",embdfs::Resource({ resource_" << i << ".data(), resource_" << i << ".size() - 1})},\n ";
+		output << "\n    embdfs::ResourceLocation{" << paths[i] << ",embdfs::Resource({ resource_" << i << ".data(), resource_" << i << ".size() - 1})},";
 	}
-	output << "  };\n";
+	output << "\n  };\n";
 	output << "  return resources;\n";
 	output << "}\n\n";
 
