@@ -42,13 +42,13 @@ libdeflate_result Resource::decompress_if_needed() const {
 		return libdeflate_result::LIBDEFLATE_SUCCESS;
 	}
 
-	decompressed_content.resize(decompressed_content.size() * 2);
+	decompressed_content.resize(content.size() * 2);
 	size_t decompressed_bytes = 0;
 	libdeflate_result err;
 retry:
 	err = libdeflate_zlib_decompress(decompressor, content.data(), content.size(), decompressed_content.data(), decompressed_content.size(), &decompressed_bytes);
 	if (err == libdeflate_result::LIBDEFLATE_INSUFFICIENT_SPACE) {
-		decompressed_content.resize(decompressed_bytes);
+		decompressed_content.resize(decompressed_content.size() * 2);
 		goto retry;
 	} else if (err == libdeflate_result::LIBDEFLATE_SUCCESS) {
 		decompressed_content.resize(decompressed_bytes);
